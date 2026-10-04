@@ -1,0 +1,7 @@
+[project]
+name = "resourceleak"
+version = "0.2.0"
+requires-python = ">=3.10"
+dependencies = []          # stdlib only: runs anywhere, including Termux
+[project.optional-dependencies]
+dev = ["ruff>=0.4"]
