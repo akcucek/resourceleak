@@ -1,0 +1,1059 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ResourceLeak AI · Two outlets, two local markets (mock)</title>
+<!--
+THESIS: One chain, many local markets. Two outlet "accounts" sit side by side with the same SKUs and opposite moves. Refuses the KPI-tile SaaS dashboard and the dark neon AI console.
+OWN-WORLD: Indian account ledger (khata) on cool white paper. Royal-blue ink accent, red ink for leaks, green ink for rescue. Blue ledger rules, red double margin, double-ruled totals. H3 hex fingerprints in six muted place-type hues. Anek Latin (Ek Type) with a condensed width for figures; Anek Kannada for staff input.
+STORY: HQ and the outlet see why two outlets differ, approve tomorrow's drafts, watch waste get caught and rescued, then compare realized savings with estimates.
+FIRST VIEWPORT: Top bar (brand, synthetic-data tag, Ask, HQ/Outlet toggle). Lifecycle rail on the left. H1 and a week-to-date ledger line, then two outlet accounts with hex fingerprints and context bars.
+FORM: Operate dashboard, ledger-account comparison. Direction chosen in-thread (no seed roll); staging: split accounts.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Kannada:wght@400;600&family=Anek+Latin:wdth,wght@75..125,300..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1F4F3; --sheet:#FFFFFF; --rail:#E8EDEC;
+  --ink:#16202B; --ink-2:#435060; --ink-3:#5B6676;
+  --rule:#DCE2E9; --rule-strong:#BFC9D4; --rule-blue:#CBD8EE; --margin-red:#E19C9C;
+  --accent:#2340A8; --accent-ink:#1A3186; --accent-weak:#E9EEFB;
+  --leak:#B42328; --leak-weak:#FBECEC;
+  --rescue:#1B6B45; --rescue-weak:#E3F2E9;
+  --warn:#8A5000; --warn-weak:#FCEFD6;
+  --c-edu:#6A4FB3; --c-stay:#C98317; --c-food:#24807F; --c-office:#56677A; --c-home:#6F8F2E; --c-transit:#A8436F;
+  --radius:6px;
+  --shadow:0 1px 2px rgba(22,32,43,.06),0 3px 10px rgba(22,32,43,.05);
+  --font:"Anek Latin",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-kn:"Anek Kannada","Noto Sans Kannada","Nirmala UI",sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-40px;background:var(--ink);color:#fff;padding:8px 12px;border-radius:var(--radius);z-index:50}
+.skip:focus{top:8px}
+.cond{font-stretch:88%}
+[hidden]{display:none!important}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:20px;height:60px;padding:0 20px;background:var(--sheet);border-bottom:1px solid var(--rule)}
+.brand{display:flex;align-items:center;gap:9px;font-weight:650;font-size:18px;letter-spacing:-.01em;color:var(--ink);text-decoration:none;white-space:nowrap}
+.brand em{font-style:normal;color:var(--leak)}
+.brand small{font-size:13px;font-weight:500;color:var(--ink-3);margin-left:2px}
+.org{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--ink-2);line-height:1.2;padding-left:18px;border-left:1px solid var(--rule)}
+.org strong{color:var(--ink);font-weight:600;font-size:14px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--warn-weak);color:var(--warn);white-space:nowrap}
+.ask{flex:1;max-width:440px;margin-left:auto;position:relative}
+.ask svg{position:absolute;left:10px;top:50%;width:17px;height:17px;transform:translateY(-50%);color:var(--ink-3)}
+.ask input{width:100%;height:38px;border:1px solid var(--rule-strong);border-radius:var(--radius);padding:0 12px 0 34px;font:inherit;font-size:14px;background:var(--paper);color:var(--ink)}
+.ask input::placeholder{color:var(--ink-3)}
+.ask input:hover{border-color:#A9B4C1}
+.seg{display:inline-flex;border:1px solid var(--rule-strong);border-radius:var(--radius);overflow:hidden;flex:none}
+.seg button{font:inherit;font-size:13.5px;font-weight:600;border:0;background:var(--sheet);color:var(--ink-2);padding:0 12px;height:36px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule-strong)}
+.seg button:hover{background:#F3F5F7}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.stamp{font-size:13px;color:var(--ink-3);white-space:nowrap}
+
+/* shell */
+.shell{display:grid;grid-template-columns:228px minmax(0,1fr)}
+.rail{position:sticky;top:60px;height:calc(100vh - 60px);padding:22px 12px;background:var(--rail);border-right:1px solid var(--rule);overflow:auto}
+.rail h2{font-size:13px;font-weight:600;color:var(--ink-3);margin:0 8px 10px}
+.rail ol{list-style:none;margin:0;padding:0;position:relative}
+.rail ol::before{content:"";position:absolute;left:19px;top:18px;bottom:18px;width:1px;background:var(--rule-strong)}
+.rail a{display:grid;grid-template-columns:22px 1fr auto;align-items:center;column-gap:8px;padding:8px;border-radius:var(--radius);color:var(--ink-2);text-decoration:none;transition:background .15s ease}
+.rail a:hover{background:rgba(255,255,255,.6)}
+.rail .dot{width:13px;height:13px;border-radius:50%;background:var(--rail);border:1.5px solid #9AA6B4;justify-self:center;position:relative;z-index:1}
+.rail .name{font-weight:600;font-size:15px;color:var(--ink)}
+.rail .sub{grid-column:2/4;font-size:12.5px;color:var(--ink-3)}
+.rail .count{font-size:12px;font-weight:650;min-width:22px;height:20px;padding:0 6px;border-radius:999px;background:var(--sheet);color:var(--ink-2);display:inline-grid;place-items:center}
+.rail .count.hot{background:var(--leak);color:#fff}
+.rail a[aria-current="true"]{background:var(--sheet);box-shadow:var(--shadow)}
+.rail a[aria-current="true"] .dot{background:var(--accent);border-color:var(--accent)}
+.rail-foot{margin:22px 8px 0;font-size:12.5px;color:var(--ink-3);line-height:1.4}
+
+/* main */
+main{padding:28px 32px 72px;min-width:0}
+.wrap{max-width:1280px;margin:0 auto}
+h1{font-size:30px;line-height:1.12;font-weight:650;letter-spacing:-.018em;margin:0 0 8px;text-wrap:balance}
+h2{font-size:22px;line-height:1.2;font-weight:650;letter-spacing:-.012em;margin:0}
+h3{font-size:16px;line-height:1.3;font-weight:650;margin:0}
+.lede{color:var(--ink-2);max-width:72ch;font-size:16px}
+.stage{margin-top:56px}
+.stage-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:16px}
+.stage-head p{margin-top:5px;color:var(--ink-2);max-width:72ch}
+.stage-head .meta{font-size:13.5px;color:var(--ink-3);white-space:nowrap}
+.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--radius);box-shadow:var(--shadow)}
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.sheet-head p{font-size:13.5px;color:var(--ink-3);margin-top:2px}
+.sheet-body{padding:16px}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.stack{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.note{font-size:13px;color:var(--ink-3)}
+.scroll-x{overflow-x:auto}
+
+/* week-to-date ledger line */
+.carry{display:grid;grid-template-columns:auto repeat(5,minmax(0,1fr));margin:22px 0 0;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--rule-strong);background:var(--sheet)}
+.carry>div{padding:10px 14px;border-left:1px solid var(--rule)}
+.carry>div:first-child{border-left:0;display:flex;flex-direction:column;justify-content:center;background:#F7F9FB}
+.carry .head{font-weight:650;font-size:14px}
+.carry .head span{font-weight:500;color:var(--ink-3);font-size:12.5px}
+.carry dt{font-size:12.5px;color:var(--ink-3)}
+.carry dd{margin:2px 0 0;font-size:19px;font-weight:600;font-stretch:92%}
+.carry dd small{font-size:12px;font-weight:500;color:var(--ink-3);font-stretch:100%}
+.carry .pos{color:var(--rescue)}
+
+/* outlet accounts */
+.account-head h3{font-size:18px}
+.account-head .zone{font-size:14px;color:var(--ink-2);margin-top:1px}
+.cell-id{font-family:var(--mono);font-size:12px;color:var(--ink-3);white-space:nowrap}
+.account-body{display:grid;grid-template-columns:190px minmax(0,1fr);gap:20px;padding:16px}
+.hex svg{width:100%;height:auto;display:block}
+.hex figcaption{font-size:12.5px;color:var(--ink-3);text-align:center;margin-top:6px}
+.bars{display:grid;gap:8px;align-content:start;margin:0;padding:0;list-style:none}
+.bar{display:grid;grid-template-columns:132px minmax(0,1fr) 42px;align-items:center;gap:10px;font-size:13.5px}
+.bar .lab{display:flex;align-items:center;gap:7px;color:var(--ink-2)}
+.sw{width:10px;height:10px;border-radius:2px;background:var(--c);flex:none}
+.track{position:relative;height:10px;background:#EDF0F3;border-radius:2px}
+.track i{position:absolute;left:0;top:0;bottom:0;width:calc(var(--v) * 100%);background:var(--c);border-radius:2px}
+.track::after{content:"";position:absolute;left:25%;top:-4px;bottom:-4px;width:1.5px;background:var(--ink)}
+.bar b{font-weight:600;text-align:right;font-stretch:90%}
+.bars-note{font-size:12.5px;color:var(--ink-3);margin-top:4px}
+.diffs{border-top:1px solid var(--rule);padding:12px 16px 14px}
+.diffs h4{font-size:13.5px;font-weight:600;margin:0 0 8px;color:var(--ink-2)}
+.diffs ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.diffs li{display:inline-flex;align-items:baseline;gap:6px;padding:5px 10px;border:1px solid var(--rule);border-radius:999px;font-size:13.5px;background:#FAFBFC}
+.diffs li b{font-weight:650;font-stretch:90%}
+.up b{color:var(--accent)} .down b{color:var(--ink-2)}
+.opposite{margin-top:14px;display:flex;gap:10px;align-items:center;padding:10px 14px;background:var(--accent-weak);border-radius:var(--radius);font-size:14px;color:var(--accent-ink)}
+.opposite strong{font-weight:650}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:14px}
+caption{text-align:left}
+th{font-size:12.5px;font-weight:600;color:var(--ink-3);text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule-strong);white-space:nowrap;background:#FAFBFC}
+td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+.num{text-align:right;white-space:nowrap;font-stretch:88%}
+th.num{text-align:right}
+.item{font-weight:600}
+.item small{display:block;font-weight:400;color:var(--ink-3);font-size:12.5px}
+.chg{font-weight:650;white-space:nowrap;font-stretch:88%}
+.chg.up{color:var(--accent)} .chg.down{color:var(--ink-2)}
+.why{color:var(--ink-2);font-size:13.5px;min-width:200px}
+.src{display:inline-block;margin:3px 4px 0 0;font-size:11.5px;font-weight:600;color:var(--ink-3);border:1px solid var(--rule);padding:0 6px;border-radius:3px;background:#FAFBFC}
+.conf{white-space:nowrap;font-size:13px;color:var(--ink-2)}
+.conf::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:var(--c,var(--rescue));vertical-align:1px}
+.conf.med{--c:var(--warn)}
+
+/* buttons */
+.btn{font:inherit;font-weight:600;font-size:14px;height:36px;padding:0 14px;border-radius:var(--radius);border:1px solid var(--rule-strong);background:var(--sheet);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;transition:background .15s ease,border-color .15s ease,color .15s ease;text-decoration:none}
+.btn:hover{background:#F3F5F7;border-color:#A7B2BF}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-ink);border-color:var(--accent-ink)}
+.btn.small{height:30px;font-size:13px;padding:0 10px}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent-weak)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.done,.btn.done:disabled{opacity:1;background:var(--rescue-weak);border-color:transparent;color:var(--rescue)}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--rule);background:#FAFBFC;border-radius:0 0 var(--radius) var(--radius)}
+.actions .note{margin-right:auto}
+.reasons{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 16px;border-top:1px dashed var(--rule-strong);font-size:13.5px}
+.reasons span{color:var(--ink-2);margin-right:4px}
+.thanks{padding:10px 16px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--rescue);background:var(--rescue-weak)}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;font-size:12px;font-weight:650;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.badge.high{background:var(--leak-weak);color:var(--leak)}
+.badge.med{background:var(--warn-weak);color:var(--warn)}
+.badge.ok{background:var(--rescue-weak);color:var(--rescue)}
+.badge.wait{background:var(--accent-weak);color:var(--accent-ink)}
+.badge.hq{background:#EEF0F3;color:var(--ink-2)}
+
+/* radar */
+.radar{padding:14px 16px 16px}
+.radar-grid{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));row-gap:6px;position:relative;min-width:700px}
+.day{font-size:12px;color:var(--ink-3);text-align:center;padding:4px 0 6px;border-bottom:1px solid var(--rule)}
+.day b{display:block;font-size:14px;color:var(--ink);font-weight:600}
+.day.wknd{background:#F5F7F9}
+.day.today{color:var(--accent)} .day.today b{color:var(--accent)}
+.day.tmrw{background:var(--accent-weak)}
+.ev{margin:0 2px;padding:5px 8px;border-radius:4px;font-size:12.5px;line-height:1.25;color:var(--ink);background:color-mix(in srgb,var(--c) 14%,white);border:1px solid color-mix(in srgb,var(--c) 40%,white)}
+.ev b{font-weight:650;display:block}
+.ev span{color:var(--ink-2)}
+
+/* what-if */
+.whatif{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1.6fr);gap:0}
+.whatif .ctl{padding:16px;border-right:1px solid var(--rule)}
+.whatif .ctl p{font-size:13.5px;color:var(--ink-2);margin-top:4px}
+.range{margin-top:16px}
+.range label{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;font-size:14px}
+.range output{font-size:22px;font-weight:650;font-stretch:90%}
+.range input{width:100%;accent-color:var(--accent);margin:10px 0 0;height:24px;cursor:pointer}
+.marks{position:relative;height:22px;font-size:12px;color:var(--ink-3)}
+.marks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.marks span::before{content:"";display:block;width:1px;height:6px;background:var(--ink-3);margin:0 auto 2px}
+.results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.results>div{padding:16px;border-left:1px solid var(--rule)}
+.results>div:first-child{border-left:0}
+.results dt{font-size:12.5px;color:var(--ink-3)}
+.results dd{margin:4px 0 0;font-size:22px;font-weight:650;font-stretch:90%}
+.results .vs{font-size:12.5px;font-weight:600;margin-top:2px}
+.vs.good{color:var(--rescue)} .vs.bad{color:var(--leak)} .vs.flat{color:var(--ink-3)}
+.whatif-foot{grid-column:1/-1;border-top:1px solid var(--rule);padding:10px 16px;font-size:13px;color:var(--ink-3)}
+
+/* detect */
+.feed{list-style:none;margin:0;padding:0}
+.log{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;padding:13px 16px;border-bottom:1px solid var(--rule)}
+.log:last-child{border-bottom:0}
+.ico{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;background:#EEF1F5;color:var(--ink-2)}
+.ico svg{width:19px;height:19px}
+.log-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.log-top strong{font-weight:650}
+.log-meta{font-size:13px;color:var(--ink-3);margin-top:2px}
+.quote{margin-top:6px;padding:6px 10px;background:#F5F7F9;border-radius:4px;font-size:14px}
+.quote [lang="kn"]{font-family:var(--font-kn);font-size:15px}
+.quote small{display:block;color:var(--ink-3);font-size:12.5px}
+.log .row-actions{display:flex;gap:6px;margin-top:8px}
+.risk{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:13px 16px;border-bottom:1px solid var(--rule);align-items:center}
+.risk:last-child{border-bottom:0}
+.risk p{font-size:13px;color:var(--ink-3)}
+.risk .item{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* rescue */
+.hier{list-style:none;margin:0;padding:12px 16px;display:flex;flex-wrap:wrap;gap:6px 4px;align-items:center;border-bottom:1px solid var(--rule);font-size:13.5px}
+.hier li{display:flex;align-items:center;gap:4px;color:var(--ink-2)}
+.hier li b{font-weight:650;color:var(--ink)}
+.hier li+li::before{content:"→";color:var(--ink-3);margin:0 4px}
+.hier li:last-child b{color:var(--leak)}
+.ladder{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;width:132px;margin-top:6px}
+.ladder i{height:7px;border-radius:2px;background:#E6EAEE}
+.ladder i.past{background:#C3CBD5}
+.ladder i.on{background:var(--rescue)}
+.route{font-weight:650;color:var(--rescue);font-size:13.5px}
+.safety{display:block;margin-top:4px;font-size:12.5px;color:var(--warn);font-weight:600}
+
+/* report */
+.ledger{background:linear-gradient(to right,transparent 40px,var(--margin-red) 40px,var(--margin-red) 41px,transparent 41px,transparent 44px,var(--margin-red) 44px,var(--margin-red) 45px,transparent 45px),var(--sheet)}
+.ledger th{background:transparent;border-bottom:1px solid var(--rule-blue)}
+.ledger td{border-bottom:1px solid var(--rule-blue)}
+.ledger th:first-child,.ledger td:first-child{padding-left:60px}
+.ledger tbody tr:last-child td{border-bottom:1px solid var(--rule-blue)}
+.ledger tfoot td{font-weight:650;border-top:1.5px solid var(--ink);border-bottom:3px double var(--ink)}
+.ledger .real{color:var(--rescue);font-weight:600}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.hbars{list-style:none;margin:0;padding:14px 16px;display:grid;gap:10px}
+.hbars li{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:4px 10px;font-size:13.5px;align-items:center}
+.hbars .t{grid-column:1/-1;display:flex;justify-content:space-between;color:var(--ink-2)}
+.hbars .trk{height:8px;background:#EDF0F3;border-radius:2px;position:relative;grid-column:1/2}
+.hbars .trk i{position:absolute;left:0;top:0;bottom:0;width:var(--v);background:#7D8A99;border-radius:2px}
+.hbars li.top .trk i{background:var(--leak)}
+.hbars li.you .trk i{background:var(--accent)}
+.hbars li.you .t{color:var(--ink);font-weight:650}
+.hbars b{font-weight:650;text-align:right;font-stretch:90%}
+.callout{padding:10px 16px 14px;font-size:13.5px;color:var(--ink-2);border-top:1px solid var(--rule)}
+
+/* copilot */
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.chip{font:inherit;font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--rule-strong);background:var(--sheet);color:var(--ink);cursor:pointer;transition:background .15s ease,border-color .15s ease}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.answer{padding:16px;min-height:150px}
+.answer .q{font-weight:650;margin-bottom:8px}
+.answer p+p{margin-top:8px}
+.answer ul{margin:8px 0 0;padding-left:20px}
+.answer .srcs{margin-top:12px;font-size:13px;color:var(--ink-3)}
+.answer details{margin-top:10px;font-size:13px}
+.answer summary{cursor:pointer;color:var(--accent);font-weight:600}
+.answer pre{font-family:var(--mono);font-size:12.5px;background:#F5F7F9;border:1px solid var(--rule);border-radius:4px;padding:10px 12px;overflow:auto;margin:8px 0 0;line-height:1.5}
+.brief{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start;padding:16px;margin-top:22px}
+.brief ol{margin:8px 0 0;padding-left:20px}
+.brief li+li{margin-top:4px}
+footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--rule-strong);font-size:13px;color:var(--ink-3);display:grid;gap:4px}
+
+/* role view */
+body[data-role="farmer"] #overview,body[data-role="farmer"] #prevent,body[data-role="farmer"] #detect,body[data-role="farmer"] #rescue,body[data-role="farmer"] #report,body[data-role="farmer"] #ask{display:none}
+body[data-role="buyer"] [data-outlet-only]{display:none!important}
+body[data-role="farmer"] .rail{display:none}
+body[data-role="farmer"] .shell{grid-template-columns:minmax(0,1fr)}
+body[data-role="farmer"] .ask{display:none}
+.role-panel{margin:0 0 38px}
+.role-panel[hidden]{display:none!important}
+.market-table{margin-top:16px}
+.market-table td{vertical-align:middle}
+.crop-value{font-weight:650;color:var(--rescue);white-space:nowrap}
+.farmer-controls{display:flex;align-items:end;gap:12px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--rule)}
+.field{display:grid;gap:4px;min-width:210px}
+.field label{font-size:13px;font-weight:600;color:var(--ink-2)}
+.field select{height:38px;padding:0 10px;border:1px solid var(--rule-strong);border-radius:var(--radius);background:var(--sheet);color:var(--ink);font:inherit}
+.recommendation{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,.8fr);gap:18px;padding:18px 16px;background:#F7F9F7;border-bottom:1px solid var(--rule)}
+.recommendation h2{font-size:26px;margin:2px 0 6px}
+.eyebrow{font-size:12px;font-weight:650;text-transform:uppercase;color:var(--rescue)}
+.recommendation p{color:var(--ink-2)}
+.recommendation dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+.recommendation dl div{padding:10px;border-left:2px solid var(--rescue);background:#fff}
+.recommendation dt{font-size:12px;color:var(--ink-3)}
+.recommendation dd{margin:2px 0 0;font-size:18px;font-weight:650}
+.skill-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;padding:0 16px}
+.skill{padding:14px 12px;border-bottom:1px solid var(--rule)}
+.skill strong{display:block;font-size:14px}
+.skill p{font-size:13px;color:var(--ink-2);margin-top:4px}
+.mapping-note{padding:12px 16px;color:var(--ink-3);font-size:13px}
+
+@media (max-width:1100px){
+  .trio{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .whatif{grid-template-columns:minmax(0,1fr)}
+  .whatif .ctl{border-right:0;border-bottom:1px solid var(--rule)}
+  .stamp{display:none}
+}
+@media (max-width:900px){
+  .topbar{position:static;flex-wrap:wrap;height:auto;padding:12px 14px;gap:10px 12px}
+  .org{display:none}
+  .ask{order:3;flex-basis:100%;max-width:none;margin:0}
+  .seg{margin-left:auto}
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{position:sticky;top:0;z-index:25;height:auto;padding:8px 10px;border-right:0;border-bottom:1px solid var(--rule);overflow-x:auto}
+  .rail h2,.rail .sub,.rail-foot,.rail ol::before{display:none}
+  .rail ol{display:flex;gap:4px}
+  .rail a{grid-template-columns:auto auto auto;padding:6px 10px;white-space:nowrap}
+  html{scroll-padding-top:64px}
+  main{padding:20px 14px 56px}
+  h1{font-size:25px}
+  .pair,.trio{grid-template-columns:minmax(0,1fr)}
+  .recommendation,.skill-list{grid-template-columns:minmax(0,1fr)}
+  .carry{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .carry>div:first-child{grid-column:1/-1}
+  .carry>div:nth-child(2n){border-left:0}
+  .carry>div{border-top:1px solid var(--rule)}
+  .account-body{grid-template-columns:minmax(0,1fr)}
+  .hex{max-width:200px;margin:0 auto}
+  .bar{grid-template-columns:118px minmax(0,1fr) 40px}
+  .results{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .results>div:nth-child(3){border-left:0}
+  .results>div:nth-child(n+3){border-top:1px solid var(--rule)}
+  .stage-head{flex-direction:column;align-items:flex-start}
+  .order-table{min-width:640px}
+  .rescue-table{min-width:720px}
+  .ledger{min-width:620px}
+  .brief{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body data-role="buyer">
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <a class="brand" href="#overview" aria-label="ResourceLeak AI, overview">
+    <svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><path d="M14 2.5l10 5.75v11.5L14 25.5 4 19.75V8.25z" fill="none" stroke="#16202B" stroke-width="2" stroke-linejoin="round"/><path d="M14 8.6c2.6 3.2 3.9 5.4 3.9 7.1a3.9 3.9 0 0 1-7.8 0c0-1.7 1.3-3.9 3.9-7.1z" fill="#B42328"/></svg>
+    <span>Resource<em>Leak</em><small>AI</small></span>
+  </a>
+  <div class="org">
+      <strong id="orgName">Hasiru Fresh · buyer data</strong>
+    <span id="orgDetail">Bengaluru pilot <span class="tag">Synthetic demo data</span></span>
+  </div>
+  <form class="ask" id="askForm" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/></svg>
+    <label class="vh" for="askInput">Ask ResourceLeak</label>
+    <input id="askInput" type="search" placeholder="Ask: why is Outlet 14 ordering fewer tomatoes?" autocomplete="off">
+  </form>
+  <div class="seg" role="group" aria-label="Choose account type">
+    <button type="button" data-role-btn="buyer" aria-pressed="true">Buyer / Hotel</button>
+    <button type="button" data-role-btn="farmer" aria-pressed="false">Farmer</button>
+  </div>
+  <span class="stamp">Sun 4 Oct 2026 · 07:45 IST</span>
+</header>
+<div class="shell">
+<nav class="rail" aria-label="Lifecycle">
+  <h2>Today's loop</h2>
+  <ol>
+    <li><a href="#overview" data-nav="overview" aria-current="true"><span class="dot"></span><span class="name">Local markets</span><span></span><span class="sub">Why outlets differ</span></a></li>
+    <li><a href="#prevent" data-nav="prevent"><span class="dot"></span><span class="name">Prevent</span><span class="count hot" id="navPrevent">2</span><span class="sub">Before you buy</span></a></li>
+    <li><a href="#detect" data-nav="detect"><span class="dot"></span><span class="name">Detect</span><span class="count">4</span><span class="sub">While it's on the shelf</span></a></li>
+    <li><a href="#rescue" data-nav="rescue"><span class="dot"></span><span class="name">Rescue</span><span class="count">6</span><span class="sub">Before it becomes waste</span></a></li>
+    <li><a href="#report" data-nav="report"><span class="dot"></span><span class="name">Report</span><span></span><span class="sub">Prove the impact</span></a></li>
+    <li><a href="#ask" data-nav="ask"><span class="dot"></span><span class="name">Ask</span><span></span><span class="sub">Questions in plain language</span></a></li>
+  </ol>
+  <p class="rail-foot">Mock UI. All outlets, partners and figures are synthetic and illustrative.</p>
+</nav>
+<main id="main"><div class="wrap">
+<section id="buyerDashboard" class="role-panel" aria-labelledby="buyerTitle">
+  <h1 id="buyerTitle">Local crop demand</h1>
+  <p class="lede">Current buying signals for retail and hotel teams. Share demand with growers before the next planting cycle.</p>
+  <div class="sheet market-table">
+    <div class="sheet-head"><div><h3>Nearby buyer requirements</h3><p>Indicative buyer demand and mandi rates · Karnataka</p><p id="marketStatus" class="note" role="status">No live mandi quote. Configure a data.gov.in API key. Buyer demand is demo data.</p></div><span class="tag">Buyer demand: demo</span></div>
+    <div class="scroll-x"><table><caption class="vh">Buyer demand, prices and matching soil</caption><thead><tr><th>Crop</th><th>Buyer demand</th><th>Price range</th><th>Trend</th><th>Good soil match</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="item">Tomato<small>Fresh, graded</small></td><td>220 kg / week <span class="src">demo</span></td><td class="crop-value" data-market-price="tomato">No live quote</td><td><span class="badge ok">Rising · demo</span></td><td>Red loam</td><td><button class="btn small" type="button" data-farm-match="red-loam">View farmer match</button></td></tr>
+        <tr><td class="item">Onion<small>Medium bulb</small></td><td>180 kg / week <span class="src">demo</span></td><td class="crop-value" data-market-price="onion">No live quote</td><td><span class="badge ok">Steady · demo</span></td><td>Black cotton</td><td><button class="btn small" type="button" data-farm-match="black-cotton">View farmer match</button></td></tr>
+        <tr><td class="item">Watermelon<small>Table size</small></td><td>300 kg / week <span class="src">demo</span></td><td class="crop-value" data-market-price="watermelon">No live quote</td><td><span class="badge wait">Seasonal peak · demo</span></td><td>Sandy loam</td><td><button class="btn small" type="button" data-farm-match="sandy-loam">View farmer match</button></td></tr>
+        <tr><td class="item">Paddy<small>Short-grain rice</small></td><td>420 kg / week <span class="src">demo</span></td><td class="crop-value" data-market-price="paddy">No live quote</td><td><span class="badge ok">Rising · demo</span></td><td>Clay loam</td><td><button class="btn small" type="button" data-farm-match="clay-loam">View farmer match</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+<section id="farmerDashboard" class="role-panel" aria-labelledby="farmerTitle" hidden>
+  <h1 id="farmerTitle">Your soil, your crop plan</h1>
+  <p class="lede">Match soil conditions with nearby buyer demand, then follow a practical growing and harvest checklist.</p>
+  <div class="sheet" style="margin-top:16px">
+    <div class="farmer-controls">
+      <div class="field"><label for="soilType">Soil type</label><select id="soilType"><option value="red-loam">Red loam</option><option value="black-cotton">Black cotton</option><option value="sandy-loam">Sandy loam</option><option value="clay-loam">Clay loam</option></select></div>
+      <p class="note">Recommendations combine this soil profile with the buyer demand shown in the market feed.</p>
+    </div>
+    <div class="recommendation" aria-live="polite">
+      <div><span class="eyebrow">Best current match · <span id="soilLabel">Red loam</span></span><h2 id="cropName">Tomato</h2><p id="cropReason"></p></div>
+      <dl><div><dt>Buyer demand</dt><dd id="cropDemand"></dd></div><div><dt>Live mandi price</dt><dd id="cropPrice"></dd></div><div><dt>Indicative gross / acre</dt><dd id="cropValue"></dd></div><div><dt>Buyer interest</dt><dd id="cropInterest"></dd></div></dl>
+    </div>
+    <div class="sheet-head"><div><h3>Skills and growing procedure</h3><p id="procedureTitle">Recommended learning path for tomato</p></div><span class="badge wait">Mapped to crop + soil</span></div>
+    <div class="skill-list" id="skillList"></div>
+    <p class="mapping-note">Gross value is an illustrative estimate, not guaranteed income. Confirm local soil tests, water availability, input costs and buyer terms before planting.</p>
+    <div class="actions"><span class="note" id="planStatus" role="status">This plan is ready to share with matched buyers.</span><button class="btn primary" type="button" id="sharePlan">Share crop plan with buyers</button></div>
+  </div>
+</section>
+<section id="overview" aria-labelledby="h-overview">
+  <h1 id="h-overview"><span data-hq>Two outlets, two local markets</span><span data-outlet-only>Outlet 14 · plan for Monday</span></h1>
+  <p class="lede" data-hq>Same chain, same products, different plans. Drafts for Mon 5 Oct were generated at 07:45 IST from each outlet's sales and waste history plus its local context.</p>
+  <p class="lede" data-outlet-only>Your drafts for Mon 5 Oct, built from this outlet's own sales and waste history plus the area around it.</p>
+
+  <div class="sheet brief" data-outlet-only>
+    <div>
+      <h2>Morning leak brief</h2>
+      <p class="note">Sent to the outlet WhatsApp group at 07:45 · English, ಕನ್ನಡ, हिंदी</p>
+      <ol>
+        <li>Approve tomorrow's order draft. It saves about ₹1,640 against your usual order (est.).</li>
+        <li>Mark down spinach 25% after 6 pm. 14 bunches are at high risk.</li>
+        <li>Complete the food-safety check on 40 loaves before the 8 pm food-bank pickup.</li>
+      </ol>
+    </div>
+    <a class="btn primary" href="#prevent">Start with the order</a>
+  </div>
+
+  <dl class="carry" data-hq>
+    <div><dt class="head">Week to date <span>28 Sep – 4 Oct</span></dt><dd class="vh">Totals so far this week</dd></div>
+    <div><dt>Recovered</dt><dd class="pos">₹48,320</dd></div>
+    <div><dt>Waste avoided</dt><dd>312 kg</dd></div>
+    <div><dt>CO₂e avoided</dt><dd>≈ 0.78 t <small>est.</small></dd></div>
+    <div><dt>Meals rescued</dt><dd>146</dd></div>
+    <div><dt>Awaiting approval</dt><dd><span id="pendingCount">2</span> <small>order drafts</small></dd></div>
+  </dl>
+
+  <div class="stage-head" style="margin-top:32px">
+    <div>
+      <h2>Why these outlets need different plans</h2>
+      <p>Local Context Vector built from Places Insights H3 counts and scaled to the Bengaluru median. Uses aggregated place types only; nothing is inferred about people.</p>
+    </div>
+  </div>
+
+  <div class="pair by-outlet">
+    <article class="sheet" data-outlet="14" aria-labelledby="a14">
+      <header class="sheet-head account-head">
+        <div><h3 id="a14">Outlet 14 · Zone A</h3><p class="zone">Campus and hostel cluster · 1.1 km catchment</p></div>
+        <span class="cell-id" title="Illustrative H3 cell, resolution 9">89618928cb3ffff</span>
+      </header>
+      <div class="account-body">
+        <figure class="hex" style="margin:0"><div id="hex14"></div><figcaption>H3 ring around the outlet, coloured by dominant place type</figcaption></figure>
+        <div>
+          <ul class="bars">
+            <li class="bar" style="--c:var(--c-stay);--v:.85"><span class="lab"><i class="sw"></i>Hostels &amp; PGs</span><span class="track"><i></i></span><b>3.4×</b></li>
+            <li class="bar" style="--c:var(--c-edu);--v:.70"><span class="lab"><i class="sw"></i>Education</span><span class="track"><i></i></span><b>2.8×</b></li>
+            <li class="bar" style="--c:var(--c-food);--v:.525"><span class="lab"><i class="sw"></i>Food &amp; groceries</span><span class="track"><i></i></span><b>2.1×</b></li>
+            <li class="bar" style="--c:var(--c-office);--v:.225"><span class="lab"><i class="sw"></i>Offices</span><span class="track"><i></i></span><b>0.9×</b></li>
+            <li class="bar" style="--c:var(--c-transit);--v:.35"><span class="lab"><i class="sw"></i>Transit</span><span class="track"><i></i></span><b>1.4×</b></li>
+            <li class="bar" style="--c:var(--c-home);--v:.15"><span class="lab"><i class="sw"></i>Residential</span><span class="track"><i></i></span><b>0.6×</b></li>
+          </ul>
+          <p class="bars-note">Black tick = Bengaluru median (1.0×). Scale ends at 4×.</p>
+        </div>
+      </div>
+      <div class="diffs">
+        <h4>Sells differently from the chain average</h4>
+        <ul>
+          <li class="up">Cut-fruit cups <b>+58%</b></li>
+          <li class="up">Bananas <b>+34%</b></li>
+          <li class="down">Spinach <b>−31%</b></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="sheet" data-outlet="27" aria-labelledby="a27">
+      <header class="sheet-head account-head">
+        <div><h3 id="a27">Outlet 27 · Zone B</h3><p class="zone">Family residential area · 1.4 km catchment</p></div>
+        <span class="cell-id" title="Illustrative H3 cell, resolution 9">8961893a1c3ffff</span>
+      </header>
+      <div class="account-body">
+        <figure class="hex" style="margin:0"><div id="hex27"></div><figcaption>H3 ring around the outlet, coloured by dominant place type</figcaption></figure>
+        <div>
+          <ul class="bars">
+            <li class="bar" style="--c:var(--c-stay);--v:.10"><span class="lab"><i class="sw"></i>Hostels &amp; PGs</span><span class="track"><i></i></span><b>0.4×</b></li>
+            <li class="bar" style="--c:var(--c-edu);--v:.20"><span class="lab"><i class="sw"></i>Education</span><span class="track"><i></i></span><b>0.8×</b></li>
+            <li class="bar" style="--c:var(--c-food);--v:.325"><span class="lab"><i class="sw"></i>Food &amp; groceries</span><span class="track"><i></i></span><b>1.3×</b></li>
+            <li class="bar" style="--c:var(--c-office);--v:.175"><span class="lab"><i class="sw"></i>Offices</span><span class="track"><i></i></span><b>0.7×</b></li>
+            <li class="bar" style="--c:var(--c-transit);--v:.20"><span class="lab"><i class="sw"></i>Transit</span><span class="track"><i></i></span><b>0.8×</b></li>
+            <li class="bar" style="--c:var(--c-home);--v:.65"><span class="lab"><i class="sw"></i>Residential</span><span class="track"><i></i></span><b>2.6×</b></li>
+          </ul>
+          <p class="bars-note">Black tick = Bengaluru median (1.0×). Scale ends at 4×.</p>
+        </div>
+      </div>
+      <div class="diffs">
+        <h4>Sells differently from the chain average</h4>
+        <ul>
+          <li class="up">Onions &amp; potatoes <b>+27%</b></li>
+          <li class="up">Spinach <b>+19%</b></li>
+          <li class="down">Ready-to-eat cups <b>−44%</b></li>
+        </ul>
+      </div>
+    </article>
+  </div>
+  <p class="opposite" data-hq><strong>Same SKUs, opposite moves.</strong> Tomorrow, Outlet 14 orders more bananas and less spinach, and Outlet 27 does the reverse. A chain-wide average would get both outlets wrong.</p>
+</section>
+<section class="stage" id="prevent" aria-labelledby="h-prevent">
+  <div class="stage-head">
+    <div>
+      <h2 id="h-prevent">Prevent</h2>
+      <p>Order drafts for Mon 5 Oct, the local calendar behind them, and a what-if check before anything is bought.</p>
+    </div>
+    <span class="meta"><span id="pendingCount2">2</span> drafts awaiting approval</span>
+  </div>
+
+  <div class="stack">
+    <div class="sheet">
+      <div class="sheet-head">
+        <div><h3>Local event &amp; calendar radar</h3><p>Next 14 days · from weather forecast, college calendars and the city festival calendar</p></div>
+      </div>
+      <div class="radar scroll-x">
+        <div class="radar-grid" id="radar" aria-label="Events from 4 to 17 October"></div>
+      </div>
+    </div>
+
+    <div class="pair by-outlet">
+      <div class="sheet" data-outlet="14" data-draft>
+        <div class="sheet-head">
+          <div><h3>Outlet 14 · order draft for Monday</h3><p>₹11,860 order value · saves ≈ ₹1,640 vs usual (est.)</p></div>
+          <span class="badge wait" data-status>Awaiting approval</span>
+        </div>
+        <div class="scroll-x">
+          <table class="order-table">
+            <caption class="vh">Outlet 14 order draft</caption>
+            <thead><tr><th>Item</th><th class="num">Usual</th><th class="num">Draft</th><th>Why</th><th>Confidence</th></tr></thead>
+            <tbody>
+              <tr><td class="item">Bananas<small>robusta</small></td><td class="num">120 kg</td><td class="num">138 kg <span class="chg up">▲ 15%</span></td><td class="why">Exam week: evening fruit sales rose 31% in the last exam week.<br><span class="src">POS</span><span class="src">Campus calendar</span></td><td class="conf">High ± 9 kg</td></tr>
+              <tr><td class="item">Tomatoes</td><td class="num">80 kg</td><td class="num">70 kg <span class="chg down">▼ 13%</span></td><td class="why">22% spoiled in the last 14 days; humidity 78% on Mon–Tue.<br><span class="src">Waste log</span><span class="src">Weather</span></td><td class="conf med">Medium ± 8 kg</td></tr>
+              <tr><td class="item">Spinach<small>palak</small></td><td class="num">30 bn</td><td class="num">18 bn <span class="chg down">▼ 40%</span></td><td class="why">Only 54% sold on the last 4 Mondays.<br><span class="src">POS</span></td><td class="conf">High ± 3 bn</td></tr>
+              <tr><td class="item">Cut-fruit cups</td><td class="num">60</td><td class="num">75 <span class="chg up">▲ 25%</span></td><td class="why">Sold out by 7 pm on 3 of the last 5 days.<br><span class="src">POS</span></td><td class="conf med">Medium ± 10</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <span class="note">Within the outlet's ₹15,000 limit</span>
+          <button class="btn small" type="button" data-reject>Reject with reason</button>
+          <button class="btn small" type="button" data-edit>Edit lines</button>
+          <button class="btn primary small" type="button" data-approve>Approve draft</button>
+        </div>
+        <div class="reasons" hidden><span>What did the model miss?</span>
+          <button class="btn small" type="button" data-reason>Supplier issue</button>
+          <button class="btn small" type="button" data-reason>Local event not in calendar</button>
+          <button class="btn small" type="button" data-reason>Price change</button>
+          <button class="btn small" type="button" data-reason>Other</button>
+        </div>
+      </div>
+
+      <div class="sheet" data-outlet="27" data-draft>
+        <div class="sheet-head">
+          <div><h3>Outlet 27 · order draft for Monday</h3><p>₹16,240 order value · saves ≈ ₹1,180 vs usual (est.)</p></div>
+          <span class="badge hq" data-status>Needs HQ approval</span>
+        </div>
+        <div class="scroll-x">
+          <table class="order-table">
+            <caption class="vh">Outlet 27 order draft</caption>
+            <thead><tr><th>Item</th><th class="num">Usual</th><th class="num">Draft</th><th>Why</th><th>Confidence</th></tr></thead>
+            <tbody>
+              <tr><td class="item">Onions</td><td class="num">150 kg</td><td class="num">165 kg <span class="chg up">▲ 10%</span></td><td class="why">Monday restock: weekend basket size up 12%.<br><span class="src">POS</span></td><td class="conf">High ± 10 kg</td></tr>
+              <tr><td class="item">Spinach<small>palak</small></td><td class="num">25 bn</td><td class="num">30 bn <span class="chg up">▲ 20%</span></td><td class="why">Sold out on 3 of the last 4 Mondays.<br><span class="src">POS</span></td><td class="conf">High ± 3 bn</td></tr>
+              <tr><td class="item">Bananas<small>robusta</small></td><td class="num">110 kg</td><td class="num">92 kg <span class="chg down">▼ 16%</span></td><td class="why">14% spoiled in the last 14 days.<br><span class="src">Waste log</span><span class="src">Shelf scan</span></td><td class="conf med">Medium ± 9 kg</td></tr>
+              <tr><td class="item">Ready-to-eat cups</td><td class="num">40</td><td class="num">22 <span class="chg down">▼ 45%</span></td><td class="why">Only 41% sold over 4 weeks.<br><span class="src">POS</span></td><td class="conf">High ± 4</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <span class="note">Above the ₹15,000 outlet limit, so HQ approves</span>
+          <button class="btn small" type="button" data-reject>Reject with reason</button>
+          <button class="btn small" type="button" data-edit>Edit lines</button>
+          <button class="btn primary small" type="button" data-approve>Approve as HQ</button>
+        </div>
+        <div class="reasons" hidden><span>What did the model miss?</span>
+          <button class="btn small" type="button" data-reason>Supplier issue</button>
+          <button class="btn small" type="button" data-reason>Local event not in calendar</button>
+          <button class="btn small" type="button" data-reason>Price change</button>
+          <button class="btn small" type="button" data-reason>Other</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet whatif" data-outlet="14">
+      <div class="ctl">
+        <h3>What if we change the tomato order?</h3>
+        <p>Outlet 14, Monday. Forecast demand 62 kg ± 8 kg (est.). Cost ₹28/kg, price ₹40/kg.</p>
+        <div class="range">
+          <label for="qty">Order quantity <output id="qtyOut" for="qty">70 kg</output></label>
+          <input id="qty" type="range" min="50" max="90" step="1" value="70" aria-describedby="qtyMarks">
+          <div class="marks" id="qtyMarks"><span style="left:50%">Draft 70</span><span style="left:75%">Usual 80</span></div>
+        </div>
+      </div>
+      <dl class="results" aria-live="polite">
+        <div><dt>Procurement cost</dt><dd id="wCost">₹1,960</dd><p class="vs" id="wCostVs"></p></div>
+        <div><dt>Expected waste</dt><dd id="wWaste">8.7 kg</dd><p class="vs" id="wWasteVs"></p></div>
+        <div><dt>Stock-out risk</dt><dd id="wOut">16%</dd><p class="vs" id="wOutVs"></p></div>
+        <div><dt>Expected margin</dt><dd id="wMargin">₹493</dd><p class="vs" id="wMarginVs"></p></div>
+      </dl>
+      <p class="whatif-foot">Newsvendor estimate with normal demand. CO₂e assumes 2.5 kg CO₂e per kg of food waste avoided. Figures are estimates, not guaranteed savings.</p>
+    </div>
+
+    <div class="sheet" data-hq>
+      <div class="sheet-head">
+        <div><h3>New outlet planner</h3><p>Cold start: forecasts for a location with no sales history, borrowed from its closest look-alike outlets by Local Context Vector</p></div>
+      </div>
+      <div class="scroll-x">
+        <table>
+          <caption class="vh">Candidate H3 cells for new outlets</caption>
+          <thead><tr><th>Candidate cell</th><th>Closest twin</th><th class="num">Similarity</th><th>Suggested opening mix</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="cell-id">8961892d6a7ffff</td><td>Outlet 14</td><td class="num">0.91</td><td class="why">Fruit-heavy, small leafy-greens range, evening cut-fruit counter</td><td><button class="btn small ghost" type="button">Open plan</button></td></tr>
+            <tr><td class="cell-id">8961893a5d1ffff</td><td>Outlet 27</td><td class="num">0.87</td><td class="why">Household staples, larger packs, weekday-morning delivery</td><td><button class="btn small ghost" type="button">Open plan</button></td></tr>
+            <tr><td class="cell-id">89618925b0bffff</td><td>Outlet 09</td><td class="num">0.74</td><td class="why">Low confidence. Run a 4-week trial range before committing.</td><td><button class="btn small ghost" type="button">Open plan</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="stage" id="detect" aria-labelledby="h-detect">
+  <div class="stage-head">
+    <div>
+      <h2 id="h-detect">Detect</h2>
+      <p>Staff log waste from photos, voice notes and WhatsApp. Gemini turns each one into a structured entry, and the model flags what is likely to spoil in the next 48 hours.</p>
+    </div>
+  </div>
+  <div class="pair">
+    <div class="sheet">
+      <div class="sheet-head"><div><h3>Staff logs</h3><p>Snap-to-Log, voice notes, WhatsApp and shelf scans · this morning</p></div></div>
+      <ul class="feed">
+        <li class="log" data-outlet="14">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 8h3.2l1.8-3h6l1.8 3H20v11H4z"/><circle cx="12" cy="13" r="3.4"/></svg></span>
+          <div>
+            <p class="log-top"><strong>Tomatoes · ≈ 6.5 kg · overripe</strong><span class="badge ok">Logged</span></p>
+            <p class="log-meta">Snap-to-Log photo · Outlet 14 · 07:42 · Gemini confidence 0.86 · confirmed by Ravi K.</p>
+          </div>
+        </li>
+        <li class="log" data-outlet="27">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span>
+          <div>
+            <p class="log-top"><strong>Tomatoes · 5 kg · spoiled</strong><span class="badge wait" data-status>Needs confirmation</span></p>
+            <p class="log-meta">Voice note in Kannada · Outlet 27 · 07:18</p>
+            <p class="quote"><span lang="kn">“ಐದು ಕೆಜಿ ಟೊಮೆಟೊ ಹಾಳಾಗಿದೆ”</span><small>“Five kg of tomatoes have gone bad”</small></p>
+            <div class="row-actions"><button class="btn small primary" type="button" data-confirm="Confirmed">Confirm entry</button><button class="btn small" type="button">Edit</button></div>
+          </div>
+        </li>
+        <li class="log" data-outlet="27">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 5h16v11H9.5L5 20v-4H4z"/></svg></span>
+          <div>
+            <p class="log-top"><strong>Bananas · 12 dozen (≈ 18 kg) · overripe</strong><span class="badge ok">Sent to Rescue</span></p>
+            <p class="log-meta">WhatsApp message · Outlet 27 · 06:55</p>
+            <p class="quote">“12 dozen banana over ripe pls check”</p>
+          </div>
+        </li>
+        <li class="log" data-outlet="27">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4M7 12h10"/></svg></span>
+          <div>
+            <p class="log-top"><strong>Shelf freshness scan · 9 items graded</strong><span class="badge med">2 to sell in 24 h</span></p>
+            <p class="log-meta">Shelf photo · Outlet 27 · 06:40 · papaya at ripeness stage 5 of 7, bananas at 6 of 7</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sheet">
+      <div class="sheet-head"><div><h3>Spoilage risk · next 48 hours</h3><p>Stock age × item shelf life × forecast humidity and temperature</p></div></div>
+      <div>
+        <div class="risk" data-outlet="14"><div><p class="item"><strong>Spinach · 14 bunches</strong><span class="badge high">High</span></p><p>Outlet 14 · humidity 78% and already 2 days on the shelf</p></div><a class="btn small" href="#rescue">Plan markdown</a></div>
+        <div class="risk" data-outlet="27"><div><p class="item"><strong>Bananas · 18 kg</strong><span class="badge high">High</span></p><p>Outlet 27 · ripeness stage 6 of 7 from this morning's shelf scan</p></div><a class="btn small" href="#rescue">Plan transfer</a></div>
+        <div class="risk" data-outlet="14"><div><p class="item"><strong>Bread · 40 loaves</strong><span class="badge med">Medium</span></p><p>Outlet 14 · best before Monday</p></div><a class="btn small" href="#rescue">Plan donation</a></div>
+        <div class="risk" data-outlet="27"><div><p class="item"><strong>Papaya · 9 kg</strong><span class="badge med">Medium</span></p><p>Outlet 27 · ripeness stage 5 of 7</p></div><a class="btn small" href="#rescue">Plan markdown</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="stage" id="rescue" aria-labelledby="h-rescue">
+  <div class="stage-head">
+    <div>
+      <h2 id="h-rescue">Rescue</h2>
+      <p>Surplus goes to the highest-value route first. Donations need a staff food-safety check, and partners come from a verified list.</p>
+    </div>
+    <span class="meta">6 lots today</span>
+  </div>
+  <div class="sheet">
+    <ol class="hier" aria-label="Food-waste hierarchy, best first">
+      <li><b>Sell</b> at a markdown</li><li><b>Transfer</b> to another outlet</li><li><b>Donate</b></li><li><b>Animal feed</b></li><li><b>Compost / biogas</b></li><li><b>Landfill</b> as a last resort</li>
+    </ol>
+    <div class="scroll-x">
+      <table class="rescue-table">
+        <caption class="vh">Surplus lots and their routes</caption>
+        <thead><tr><th>Lot</th><th>Route</th><th>Plan</th><th class="num">Recovers</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr data-outlet="27"><td class="item">Bananas · 18 kg<small>Outlet 27</small></td><td><span class="route">Transfer</span><span class="ladder" aria-hidden="true"><i class="past"></i><i class="on"></i><i></i><i></i><i></i><i></i></span></td><td class="why">To Outlet 14, where banana demand is up 15% tomorrow. 3.2 km, ₹140 transport.</td><td class="num">₹1,080 net</td><td><span class="badge ok">Pickup 11:30</span></td></tr>
+          <tr data-outlet="14"><td class="item">Spinach · 14 bunches<small>Outlet 14</small></td><td><span class="route">Sell</span><span class="ladder" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">Mark down 25% after 6 pm.</td><td class="num">₹350</td><td><button class="btn small primary" type="button" data-confirm="Markdown live">Apply markdown</button></td></tr>
+          <tr data-outlet="27"><td class="item">Papaya · 9 kg<small>Outlet 27</small></td><td><span class="route">Sell</span><span class="ladder" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></span></td><td class="why">Mark down 20% today and move to the cut-fruit counter.</td><td class="num">₹420</td><td><button class="btn small primary" type="button" data-confirm="Markdown live">Apply markdown</button></td></tr>
+          <tr data-outlet="14"><td class="item">Bread · 40 loaves<small>Outlet 14</small></td><td><span class="route">Donate</span><span class="ladder" aria-hidden="true"><i class="past"></i><i class="past"></i><i class="on"></i><i></i><i></i><i></i></span></td><td class="why">City Food Bank (demo partner), pickup at 8 pm, ≈ 60 meals.<span class="safety">Pickup is blocked until staff confirm the food-safety check</span></td><td class="num">60 meals</td><td><button class="btn small primary" type="button" data-confirm="Check confirmed">Confirm safety check</button></td></tr>
+          <tr data-outlet="14"><td class="item">Fruit peel &amp; cores · 6 kg<small>Outlet 14</small></td><td><span class="route">Animal feed</span><span class="ladder" aria-hidden="true"><i class="past"></i><i class="past"></i><i class="past"></i><i class="on"></i><i></i><i></i></span></td><td class="why">Animal shelter partner (demo), daily collection at 9 pm.</td><td class="num">6 kg diverted</td><td><span class="badge ok">Scheduled</span></td></tr>
+          <tr data-outlet="27"><td class="item">Vegetable trim · 22 kg<small>Outlet 27</small></td><td><span class="route">Compost / biogas</span><span class="ladder" aria-hidden="true"><i class="past"></i><i class="past"></i><i class="past"></i><i class="past"></i><i class="on"></i><i></i></span></td><td class="why">Biogas partner (demo), pickup Wednesday.</td><td class="num">≈ 55 kg CO₂e</td><td><span class="badge ok">Scheduled</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<section class="stage" id="report" aria-labelledby="h-report">
+  <div class="stage-head">
+    <div>
+      <h2 id="h-report">Report</h2>
+      <p>Estimated against realized savings, where waste comes from, and how an outlet compares with its look-alikes.</p>
+    </div>
+    <button class="btn" type="button" data-hq data-confirm="Draft ready for finance review">Draft BRSR waste disclosure</button>
+  </div>
+
+  <div class="sheet" data-hq>
+    <div class="sheet-head"><div><h3>Impact ledger · all outlets</h3><p>Realized = measured against each outlet's baseline after the recommendation was accepted</p></div></div>
+    <div class="scroll-x">
+      <table class="ledger">
+        <caption class="vh">Weekly impact ledger</caption>
+        <thead><tr><th>Week</th><th class="num">Recommendations</th><th class="num">Accepted</th><th class="num">Estimated saving</th><th class="num">Realized saving</th><th class="num">Realized vs est.</th></tr></thead>
+        <tbody>
+          <tr><td>7–13 Sep</td><td class="num">64</td><td class="num">41</td><td class="num">₹31,200</td><td class="num real">₹27,900</td><td class="num">89%</td></tr>
+          <tr><td>14–20 Sep</td><td class="num">71</td><td class="num">52</td><td class="num">₹38,600</td><td class="num real">₹35,100</td><td class="num">91%</td></tr>
+          <tr><td>21–27 Sep</td><td class="num">69</td><td class="num">55</td><td class="num">₹41,300</td><td class="num real">₹39,800</td><td class="num">96%</td></tr>
+          <tr><td>28 Sep – 4 Oct <span class="note">to date</span></td><td class="num">58</td><td class="num">47</td><td class="num">₹50,900</td><td class="num real">₹48,320</td><td class="num">95%</td></tr>
+        </tbody>
+        <tfoot><tr><td>Four weeks</td><td class="num">262</td><td class="num">195</td><td class="num">₹1,62,000</td><td class="num real">₹1,51,120</td><td class="num">93%</td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+
+  <div class="trio">
+    <div class="sheet" data-hq>
+      <div class="sheet-head"><div><h3>Why waste happens</h3><p>Reasons logged by staff · last 30 days</p></div></div>
+      <ul class="hbars">
+        <li class="top"><span class="t">Over-ordering</span><span class="trk"><i style="--v:100%"></i></span><b>38%</b></li>
+        <li><span class="t">Heat &amp; humidity</span><span class="trk"><i style="--v:63%"></i></span><b>24%</b></li>
+        <li><span class="t">Handling damage</span><span class="trk"><i style="--v:42%"></i></span><b>16%</b></li>
+        <li><span class="t">Supplier batch quality</span><span class="trk"><i style="--v:34%"></i></span><b>13%</b></li>
+        <li><span class="t">Expiry &amp; other</span><span class="trk"><i style="--v:24%"></i></span><b>9%</b></li>
+      </ul>
+      <p class="callout">Over-ordering is the biggest lever, and Prevent targets it directly.</p>
+    </div>
+
+    <div class="sheet">
+      <div class="sheet-head"><div><h3>Outlet 14 vs its look-alikes</h3><p>Waste as % of purchases · outlets with a similar Local Context Vector</p></div></div>
+      <ul class="hbars">
+        <li><span class="t">Outlet 31</span><span class="trk"><i style="--v:52%"></i></span><b>4.1%</b></li>
+        <li><span class="t">Outlet 40</span><span class="trk"><i style="--v:58%"></i></span><b>4.6%</b></li>
+        <li><span class="t">Outlet 09</span><span class="trk"><i style="--v:66%"></i></span><b>5.2%</b></li>
+        <li><span class="t">Outlet 18</span><span class="trk"><i style="--v:75%"></i></span><b>5.9%</b></li>
+        <li class="you"><span class="t">Outlet 14 (this outlet)</span><span class="trk"><i style="--v:86%"></i></span><b>6.8%</b></li>
+        <li><span class="t">Outlet 22</span><span class="trk"><i style="--v:100%"></i></span><b>7.9%</b></li>
+      </ul>
+      <p class="callout">Closest peer Outlet 31 orders tomatoes daily instead of every other day.</p>
+    </div>
+
+    <div class="sheet" data-hq>
+      <div class="sheet-head"><div><h3>Supplier freshness</h3><p>Tomato batches · days to spoil after delivery · last 30 days</p></div></div>
+      <ul class="hbars">
+        <li><span class="t">Supplier S-02</span><span class="trk"><i style="--v:100%"></i></span><b>3.4 d</b></li>
+        <li><span class="t">Supplier S-07</span><span class="trk"><i style="--v:82%"></i></span><b>2.8 d</b></li>
+        <li class="top"><span class="t">Supplier S-05</span><span class="trk"><i style="--v:62%"></i></span><b>2.1 d</b></li>
+      </ul>
+      <p class="callout">S-05 batches spoil 1.3 days sooner than S-02. Ask for a better grade, or shift volume to S-02.</p>
+    </div>
+  </div>
+</section>
+<section class="stage" id="ask" aria-labelledby="h-ask">
+  <div class="stage-head">
+    <div>
+      <h2 id="h-ask">Ask ResourceLeak</h2>
+      <p>Plain-language questions answered by Gemini from your BigQuery tables, with the sources and the query shown.</p>
+    </div>
+  </div>
+  <div class="sheet">
+    <div class="chips" role="group" aria-label="Suggested questions">
+      <button class="chip" type="button" data-q="tomato" aria-pressed="true">Why is Outlet 14 ordering fewer tomatoes?</button>
+      <button class="chip" type="button" data-q="leak" aria-pressed="false">Where did we leak the most money this week?</button>
+      <button class="chip" type="button" data-q="brsr" aria-pressed="false">Draft the September waste disclosure for BRSR</button>
+    </div>
+    <div class="answer" id="answer" aria-live="polite"></div>
+  </div>
+  <footer>
+    <span>Guardrails: aggregated place types and the business's own transactions only. Nothing is inferred about ethnicity, religion, caste or other sensitive attributes.</span>
+    <span>All outlets, partners, H3 cell IDs and figures are synthetic and illustrative. Forecasts show confidence and are estimates, not guaranteed savings.</span>
+  </footer>
+</section>
+</div></main>
+</div>
+<script>
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+  const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  /* H3 ring fingerprints (radius 2 = 19 cells, centre = outlet) */
+  const NAMES = {edu:'Education', stay:'Hostels & PGs', food:'Food & groceries', office:'Offices', home:'Residential', transit:'Transit'};
+  function drawHex(id, cells, label) {
+    const s = 19, r3 = Math.sqrt(3), coords = [];
+    for (let q = -2; q <= 2; q++) for (let r = Math.max(-2, -q - 2); r <= Math.min(2, -q + 2); r++) coords.push([q, r]);
+    let out = '';
+    coords.forEach(([q, r], i) => {
+      const x = s * r3 * (q + r / 2), y = s * 1.5 * r;
+      const pts = [0,1,2,3,4,5].map(k => { const a = Math.PI / 180 * (60 * k - 30); return (x + s * Math.cos(a)).toFixed(1) + ',' + (y + s * Math.sin(a)).toFixed(1); }).join(' ');
+      const [k, v] = cells[i];
+      if (k === 'centre') {
+        out += `<polygon points="${pts}" style="fill:#fff;stroke:#16202B;stroke-width:1.5"><title>Outlet</title></polygon><circle cx="${x}" cy="${y}" r="8.5" style="fill:none;stroke:#2340A8;stroke-width:1.3"/><circle cx="${x}" cy="${y}" r="4.5" style="fill:#2340A8"/>`;
+      } else {
+        out += `<polygon points="${pts}" style="fill:var(--c-${k});fill-opacity:${(.28 + .62 * v).toFixed(2)};stroke:#fff;stroke-width:2"><title>${NAMES[k]}</title></polygon>`;
+      }
+    });
+    const W = 5 * s * r3, H = 8 * s;
+    document.getElementById(id).innerHTML = `<svg viewBox="${(-W/2-2).toFixed(1)} ${-H/2-2} ${(W+4).toFixed(1)} ${H+4}" role="img" aria-label="${label}">${out}</svg>`;
+  }
+  drawHex('hex14', [
+    ['stay',.9],['edu',.7],['food',.6],
+    ['edu',1],['stay',.8],['food',.9],['transit',.6],
+    ['edu',.9],['food',.7],['centre'],['stay',1],['food',.8],
+    ['stay',.7],['edu',.6],['food',.5],['office',.5],
+    ['transit',.7],['home',.4],['stay',.6]
+  ], 'Outlet 14 surroundings: mostly hostels, education and food outlets');
+  drawHex('hex27', [
+    ['home',.9],['home',.7],['food',.4],
+    ['home',1],['transit',.4],['home',.8],['edu',.5],
+    ['home',.6],['food',.5],['centre'],['home',.9],['office',.4],
+    ['home',.7],['food',.6],['home',.8],['edu',.4],
+    ['home',.5],['office',.5],['home',.6]
+  ], 'Outlet 27 surroundings: mostly residential with some groceries');
+
+  /* Event radar: 4–17 Oct 2026 */
+  const wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let rh = '';
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(2026, 9, 4 + i), w = d.getDay();
+    const cls = ['day', (w === 0 || w === 6) && 'wknd', i === 0 && 'today', i === 1 && 'tmrw'].filter(Boolean).join(' ');
+    rh += `<div class="${cls}" style="grid-row:1;grid-column:${i + 1}">${i === 0 ? 'Today' : i === 1 ? 'Tmrw' : wd[w]}<b>${d.getDate()}</b></div>`;
+  }
+  [
+    {c:'--warn', from:2, to:3, t:'Humid and hot', s:'78% RH · 31 °C · all outlets'},
+    {c:'--c-edu', from:3, to:6, t:'Campus mid-sem exams', s:'Zone A outlets'},
+    {c:'--c-home', from:7, to:8, t:'Weekend restock', s:'Zone B outlets'},
+    {c:'--accent', from:8, to:14, t:'Navaratri begins', s:'City festival calendar · all outlets'}
+  ].forEach((e, i) => { rh += `<div class="ev" style="--c:var(${e.c});grid-row:${i + 2};grid-column:${e.from}/${e.to + 1}"><b>${e.t}</b><span>${e.s}</span></div>`; });
+  $('#radar').innerHTML = rh;
+
+  /* What-if: newsvendor with normal demand */
+  const MU = 62, SD = 8, COST = 28, PRICE = 40, USUAL = 80;
+  const pdf = z => Math.exp(-z * z / 2) / Math.sqrt(2 * Math.PI);
+  const cdf = z => { const t = 1 / (1 + 0.2316419 * Math.abs(z)); const p = pdf(z) * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429)))); return z >= 0 ? 1 - p : p; };
+  const calc = q => { const z = (q - MU) / SD, left = (q - MU) * cdf(z) + SD * pdf(z); return {cost: q * COST, waste: left, out: 1 - cdf(z), margin: (q - left) * PRICE - q * COST}; };
+  function setVs(sel, d, fmt, lowerIsGood) {
+    const el = $(sel);
+    if (Math.abs(d) < 0.05) { el.className = 'vs flat'; el.textContent = 'Same as usual 80 kg'; return; }
+    el.className = 'vs ' + ((lowerIsGood ? d < 0 : d > 0) ? 'good' : 'bad');
+    el.textContent = (d > 0 ? '+' : '−') + fmt(Math.abs(d)) + ' vs usual';
+  }
+  function renderWhatIf() {
+    const q = +$('#qty').value, a = calc(q), u = calc(USUAL);
+    $('#qtyOut').textContent = q + ' kg';
+    $('#wCost').textContent = inr(a.cost); setVs('#wCostVs', a.cost - u.cost, inr, true);
+    $('#wWaste').textContent = a.waste.toFixed(1) + ' kg'; setVs('#wWasteVs', a.waste - u.waste, d => d.toFixed(1) + ' kg', true);
+    $('#wOut').textContent = Math.round(a.out * 100) + '%'; setVs('#wOutVs', (a.out - u.out) * 100, d => Math.round(d) + ' pts', true);
+    $('#wMargin').textContent = inr(a.margin); setVs('#wMarginVs', a.margin - u.margin, inr, false);
+  }
+  $('#qty').addEventListener('input', renderWhatIf);
+  renderWhatIf();
+
+  /* Copilot answers (canned for the mock) */
+  const ANS = {
+    tomato: `<p class="q">Why is Outlet 14 ordering fewer tomatoes?</p>
+      <p>Outlet 14 spoiled <strong>22%</strong> of the tomatoes it bought in the last 14 days, against a chain median of 9%. Humidity is forecast at 78% on Monday and Tuesday, which shortens shelf life further.</p>
+      <p>Cutting the order from 80 kg to 70 kg lowers expected leftover stock from about 18 kg to 9 kg. Stock-out risk rises from about 1% to 16%, but expected margin still improves by about ₹253 a day, because unsold tomatoes cost more than the occasional missed sale.</p>
+      <p class="srcs">Sources: waste_daily (14 days) · pos_sales · weather_forecast · Confidence: medium</p>
+      <details><summary>Show the query</summary><pre>SELECT outlet_id,
+       SAFE_DIVIDE(SUM(waste_kg), SUM(purchased_kg)) AS spoil_rate
+FROM   rl.waste_daily
+WHERE  sku = 'TOMATO'
+  AND  day >= DATE_SUB(DATE '2026-10-04', INTERVAL 14 DAY)
+GROUP  BY outlet_id
+ORDER  BY spoil_rate DESC;</pre></details>`,
+  leak: `<p class="q">Where did we leak the most money this week?</p>
+      <p>Three leaks make up 28% of this week's avoidable waste (28 Sep – 4 Oct):</p>
+      <ul><li><strong>Outlet 22 · tomatoes · ₹6,480.</strong> Over-ordered on 5 of 7 days.</li>
+      <li><strong>Outlet 14 · spinach · ₹3,920.</strong> Monday over-stock; tomorrow's draft cuts it by 40%.</li>
+      <li><strong>Outlet 27 · ready-to-eat cups · ₹3,150.</strong> 41% sell-through; tomorrow's draft cuts it by 45%.</li></ul>
+      <p class="srcs">Sources: waste_daily · purchase_orders · pos_sales · Confidence: high</p>
+      <details><summary>Show the query</summary><pre>SELECT outlet_id, sku, SUM(waste_kg * unit_cost) AS leak_inr
+FROM   rl.waste_daily
+WHERE  day BETWEEN DATE '2026-09-28' AND DATE '2026-10-04'
+GROUP  BY outlet_id, sku
+ORDER  BY leak_inr DESC
+LIMIT  3;</pre></details>`,
+  brsr: `<p class="q">Draft · needs finance review before filing</p>
+      <p>In September 2026, Hasiru Fresh's 42 Bengaluru outlets prevented an estimated 1,184 kg of food waste through location-specific ordering. A further 412 kg of surplus food went to verified food-bank partners (≈ 690 meals), and 538 kg of inedible organic waste went to compost and biogas partners instead of landfill.</p>
+      <p>Estimated emissions avoided: ≈ 2.96 t CO₂e, at 2.5 kg CO₂e per kg of food waste prevented. The method, assumptions and outlet-level data are attached as an annexure.</p>
+      <p class="srcs">Sources: impact_ledger · rescue_lots · partner_receipts · For: BRSR Principle 6, waste management</p>`
+  };
+  function showAnswer(k, custom) {
+    $('#answer').innerHTML = k ? ANS[k] : `<p class="q">${esc(custom)}</p><p>This mock answers three sample questions. In the full build, Gemini writes the BigQuery query, runs it, and cites the tables it used.</p>`;
+    $$('[data-q]').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.q === k)));
+  }
+  showAnswer('tomato');
+
+  const FARM_PLANS = {
+    'red-loam': {soil:'Red loam',crop:'Tomato',cropKey:'tomato',demand:'220 kg / week',price:'₹32–40 / kg',yield:[120,180],value:'₹1.8–2.4 lakh',interest:'3 nearby buyers',reason:'Good drainage supports tomato roots. Nearby retail and hotel buyers currently show rising demand.',skills:[['Seedling and transplanting','Raise healthy seedlings; transplant with spacing that supports airflow and reduces disease.'],['Soil preparation and nutrients','Use a soil-test-led compost and nutrient plan; avoid excess nitrogen.'],['Drip irrigation and staking','Keep moisture even, stake plants early, and check for water stress each week.'],['Pest and disease scouting','Inspect leaves twice weekly; remove affected material and use locally approved controls.'],['Harvest grading','Pick at the right maturity, sort by size, and keep produce shaded after harvest.'],['Buyer fulfilment','Confirm grade, quantity and pickup date with a buyer before dispatch.']]},
+    'black-cotton': {soil:'Black cotton',crop:'Onion',cropKey:'onion',demand:'180 kg / week',price:'₹28–36 / kg',yield:[100,160],value:'₹1.5–2.1 lakh',interest:'2 nearby buyers',reason:'Black cotton soil holds moisture. Onion can fit with raised beds and careful drainage; check the local season before sowing.',skills:[['Nursery and transplanting','Raise uniform seedlings and transplant at the recommended spacing for the chosen variety.'],['Raised beds and drainage','Form beds that shed excess water and prevent bulb rot.'],['Irrigation scheduling','Reduce watering as bulbs mature; avoid waterlogging and sudden dry spells.'],['Weed and pest management','Scout regularly and manage weeds early while roots are shallow.'],['Curing and storage','Cure bulbs in a ventilated shaded area before grading and bagging.'],['Buyer fulfilment','Agree bulb size, bag weight and delivery schedule before harvest.']]},
+    'sandy-loam': {soil:'Sandy loam',crop:'Watermelon',cropKey:'watermelon',demand:'300 kg / week',price:'₹18–26 / kg',yield:[180,300],value:'₹1.6–2.3 lakh',interest:'4 nearby buyers',reason:'Sandy loam drains quickly and suits watermelon when irrigation is reliable. Buyer demand is at a seasonal peak.',skills:[['Bed preparation and sowing','Prepare well-drained beds and sow at spacing suited to the selected variety.'],['Mulch and moisture','Use mulch to reduce evaporation and keep irrigation steady during fruit set.'],['Pollination and fruit load','Protect pollinators and manage fruit load for consistent size.'],['Pest and disease scouting','Check vines and fruit weekly; remove damaged fruit and seek local extension advice.'],['Maturity and harvest','Check maturity indicators before cutting; handle fruit gently to avoid bruising.'],['Buyer fulfilment','Reserve buyer quantities and transport before the peak harvest window.']]},
+    'clay-loam': {soil:'Clay loam',crop:'Paddy',cropKey:'paddy',demand:'420 kg / week',price:'₹22–27 / kg',yield:[20,32],value:'₹1.2–1.8 lakh',interest:'3 nearby buyers',reason:'Clay loam retains water for paddy. Confirm reliable water access and the local planting calendar before committing.',skills:[['Seed selection and nursery','Choose a locally suitable variety and establish a healthy nursery.'],['Field leveling and transplanting','Level the field and transplant evenly at locally recommended spacing.'],['Water management','Manage field water by crop stage and avoid unnecessary continuous flooding.'],['Nutrient and weed management','Use soil-test guidance, split nutrient applications and control weeds early.'],['Harvest and drying','Harvest at maturity and dry grain to a safe moisture level before storage.'],['Buyer fulfilment','Confirm grain variety, moisture specification, quantity and delivery date.']]}
+  };
+  let MARKET_PRICES = {};
+  function renderFarmPlan(soil) {
+    const plan = FARM_PLANS[soil];
+    const livePrice = MARKET_PRICES[plan.cropKey];
+    $('#soilLabel').textContent = plan.soil;
+    $('#cropName').textContent = plan.crop;
+    $('#cropReason').textContent = plan.reason;
+    $('#cropDemand').textContent = plan.demand;
+    $('#cropPrice').textContent = livePrice ? `₹${Math.round(livePrice.modal_price).toLocaleString('en-IN')} / quintal · ${livePrice.market || livePrice.district}` : 'No live mandi quote';
+    $('#cropValue').textContent = livePrice ? `₹${(livePrice.min_price * plan.yield[0] / 100000).toFixed(1)}–${(livePrice.max_price * plan.yield[1] / 100000).toFixed(1)} lakh` : 'Unavailable';
+    $('#cropInterest').textContent = plan.interest;
+    $('#procedureTitle').textContent = 'Recommended learning path for ' + plan.crop.toLowerCase();
+    $('#skillList').innerHTML = plan.skills.map(([title, detail]) => `<div class="skill"><strong>${title}</strong><p>${detail}</p></div>`).join('');
+    $('#planStatus').textContent = 'This ' + plan.soil.toLowerCase() + ' plan is ready to share with matched buyers.';
+    $('#sharePlan').textContent = 'Share crop plan with buyers';
+    $('#sharePlan').classList.remove('done');
+  }
+  async function loadMarketData() {
+    try {
+      const response = await fetch('/api/market');
+      const data = await response.json();
+      MARKET_PRICES = data.prices || {};
+      $('#marketStatus').textContent = data.note;
+      Object.entries(MARKET_PRICES).forEach(([crop, price]) => {
+        const cell = document.querySelector(`[data-market-price="${crop}"]`);
+        if (cell) cell.textContent = `₹${Math.round(price.min_price).toLocaleString('en-IN')}–${Math.round(price.max_price).toLocaleString('en-IN')} / quintal · ${price.date}`;
+      });
+      renderFarmPlan($('#soilType').value);
+    } catch (error) {
+      $('#marketStatus').textContent = 'Market API unavailable. No mandi prices are shown.';
+    }
+  }
+  loadMarketData();
+  $('#soilType').addEventListener('change', e => renderFarmPlan(e.target.value));
+  renderFarmPlan($('#soilType').value);
+
+  function setRole(role) {
+    document.body.dataset.role = role;
+    $('#buyerDashboard').hidden = role !== 'buyer';
+    $('#farmerDashboard').hidden = role !== 'farmer';
+    $('#orgName').textContent = role === 'farmer' ? 'Grower account · Bengaluru' : 'Hasiru Fresh · buyer data';
+    $('#orgDetail').innerHTML = role === 'farmer' ? 'Soil and crop planning <span class="tag">Illustrative data</span>' : 'Bengaluru pilot <span class="tag">Synthetic demo data</span>';
+    $$('[data-role-btn]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.roleBtn === role)));
+    if (role === 'farmer') $('#farmerDashboard').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
+    else $('#buyerDashboard').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
+  }
+  $('#sharePlan').addEventListener('click', e => {
+    e.currentTarget.textContent = 'Plan shared with matched buyers';
+    e.currentTarget.classList.add('done');
+    $('#planStatus').textContent = 'Shared with ' + FARM_PLANS[$('#soilType').value].interest + ' for buyer review.';
+  });
+  $('#askForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const v = $('#askInput').value.trim(); if (!v) return;
+    const l = v.toLowerCase();
+    const k = /tomato/.test(l) ? 'tomato' : /leak|money|loss|most/.test(l) ? 'leak' : /brsr|esg|disclos|report/.test(l) ? 'brsr' : null;
+    showAnswer(k, v);
+    document.getElementById('ask').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+  });
+
+  /* Actions */
+  let pending = 2;
+  function updatePending() {
+    ['#pendingCount', '#pendingCount2', '#navPrevent'].forEach(s => { $(s).textContent = pending; });
+    $('#navPrevent').classList.toggle('hot', pending > 0);
+  }
+  function settle(s, cls, text) { const st = s.querySelector('[data-status]'); st.className = 'badge ' + cls; st.textContent = text; pending = Math.max(0, pending - 1); updatePending(); }
+  $$('.btn.ghost').forEach(b => { b.dataset.confirm = 'Plan drafted'; });
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('button'); if (!t || t.disabled) return;
+    const s = t.closest('[data-draft]');
+    if (t.matches('[data-approve]')) {
+      t.disabled = true; t.classList.add('done'); t.textContent = 'Approved · sent to supplier';
+      s.querySelectorAll('[data-reject],[data-edit]').forEach(b => b.disabled = true);
+      s.querySelector('.reasons').hidden = true;
+      settle(s, 'ok', 'Approved 07:46');
+    } else if (t.matches('[data-reject]')) {
+      const r = s.querySelector('.reasons'); r.hidden = !r.hidden; t.setAttribute('aria-expanded', String(!r.hidden));
+    } else if (t.matches('[data-reason]')) {
+      const msg = document.createElement('p'); msg.className = 'thanks'; msg.setAttribute('role', 'status');
+      msg.textContent = `Rejected: “${t.textContent}”. Saved as feedback for the next model retrain.`;
+      s.querySelector('.reasons').replaceWith(msg);
+      s.querySelectorAll('[data-approve],[data-edit],[data-reject]').forEach(b => b.disabled = true);
+      settle(s, 'high', 'Rejected');
+    } else if (t.matches('[data-edit]')) {
+      const on = t.textContent !== 'Done editing';
+      s.querySelectorAll('tbody td:nth-child(3)').forEach(td => { td.contentEditable = on ? 'true' : 'false'; td.style.outline = on ? '1px dashed #2340A8' : ''; });
+      t.textContent = on ? 'Done editing' : 'Edit lines';
+    } else if (t.matches('[data-confirm]')) {
+      t.disabled = true; t.classList.add('done'); t.textContent = t.dataset.confirm;
+      const row = t.closest('.row-actions'); if (row) row.querySelectorAll('button:not([data-confirm])').forEach(b => b.disabled = true);
+      const st = t.closest('li')?.querySelector('[data-status]'); if (st) { st.className = 'badge ok'; st.textContent = 'Logged'; }
+    } else if (t.matches('[data-q]')) {
+      showAnswer(t.dataset.q);
+    } else if (t.matches('[data-role-btn]')) {
+      setRole(t.dataset.roleBtn);
+    } else if (t.matches('[data-farm-match]')) {
+      $('#soilType').value = t.dataset.farmMatch;
+      renderFarmPlan(t.dataset.farmMatch);
+      setRole('farmer');
+    }
+  });
+
+  /* Rail: highlight the stage in view */
+  const links = $$('[data-nav]');
+  const io = new IntersectionObserver(en => en.forEach(x => {
+    if (x.isIntersecting) links.forEach(a => a.setAttribute('aria-current', String(a.dataset.nav === x.target.id)));
+  }), {rootMargin: '-30% 0px -60% 0px'});
+  ['overview', 'prevent', 'detect', 'rescue', 'report', 'ask'].forEach(id => io.observe(document.getElementById(id)));
+})();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

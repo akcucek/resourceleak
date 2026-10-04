@@ -1,5 +1,5 @@
 import unittest
-from resourceleak import context, forecast, ledger, llm, rescue, spoilage
+from resourceleak import context, forecast, ledger, llm, market, rescue, spoilage
 
 
 class Core(unittest.TestCase):
@@ -63,3 +63,26 @@ class PlacesCloud(unittest.TestCase):
         self.assertFalse(places.valid_location(95, 0)); self.assertFalse(places.valid_location(1, 1, 10)); self.assertFalse(places.valid_location("a", 1))
         self.assertFalse(cloud.export([{"id": "a", "real": 1}]))          # disabled without BQ_DATASET
         self.assertEqual(cloud.build_rows([{"id": "a", "real": 5, "lot": "x"}])[0]["json"]["real"], 5)
+
+class MarketData(unittest.TestCase):
+    def test_mandi_prices_are_normalized_and_filtered(self):
+        from urllib.parse import parse_qs, urlparse
+        calls = []
+        def fake(url):
+            calls.append(parse_qs(urlparse(url).query))
+            return {"records": [
+                {"Commodity": "Tomato", "Min_Price": "2000", "Max_Price": "3000", "Modal_Price": "2500", "Arrival_Date": "03/10/2026", "Market": "Old market"},
+                {"commodity": "Tomato", "min_price": "2100", "max_price": "3100", "modal_price": "2600", "arrival_date": "04/10/2026", "market": "Bengaluru"},
+                {"commodity": "Tomato", "min_price": "1900", "max_price": "2900", "modal_price": "2400", "arrival_date": "29/09/2026", "market": "Older market"},
+                {"commodity": "Unknown", "min_price": "1", "max_price": "2", "modal_price": "1", "arrival_date": "05/10/2026"},
+            ]}
+        prices = market.fetch_prices("test-key", get=fake)
+        self.assertEqual(prices["tomato"]["modal_price"], 2600)
+        self.assertEqual(prices["tomato"]["market"], "Bengaluru")
+        self.assertEqual(calls[0]["api-key"], ["test-key"])
+        self.assertEqual(calls[0]["filters[state]"], ["Karnataka"])
+
+    def test_market_without_key_is_explicitly_unconfigured(self):
+        result = market.market_data(api_key="", get=lambda url: {})
+        self.assertEqual(result["source"], "not_configured")
+        self.assertIn("POS feed", result["note"])

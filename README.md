@@ -15,5 +15,7 @@ Prevent -> Detect -> Rescue -> Prove. A working demo: real engine behind the UI,
 ## Not real yet
 Seed data is synthetic; the Ask box, event radar, hex maps and new-outlet planner are still static mock content; no auth; BigQuery/Places Insights not connected.
 
-Config (env): PORT, RL_DB, OUTLET_ORDER_LIMIT_INR, CO2E_KG_PER_KG_WASTE, GEMINI_API_KEY, GEMINI_MODEL.
+The buyer/farmer prototype is served at `/proto.html`. Its mandi-price lookup uses the data.gov.in Agmarknet resource when `DATA_GOV_IN_API_KEY` is configured. The returned Karnataka modal price is live; buyer demand remains illustrative until a POS/purchase-history feed is connected. Farmer soil texture is selected from the soil report manually; uploaded soil-test parsing and locally validated yield assumptions are not connected. Google Places remains for outlet-area context and does not provide crop prices or purchase demand.
+
+Config (env): PORT, RL_DB, OUTLET_ORDER_LIMIT_INR, CO2E_KG_PER_KG_WASTE, GEMINI_API_KEY, GEMINI_MODEL, GOOGLE_MAPS_API_KEY, DATA_GOV_IN_API_KEY, MARKET_STATE.
 Docs: docs/CLOUD.md (Google Maps + Cloud Run + BigQuery), docs/ARCHITECTURE.md, docs/EDGE_CASES.md, docs/GIT_WORKFLOW.md.

@@ -1,5 +1,6 @@
 import json, threading, unittest, urllib.error, urllib.request
 from http.server import ThreadingHTTPServer
+from unittest.mock import patch
 from resourceleak.engine import Store
 from resourceleak.server import make_handler
 
@@ -26,6 +27,14 @@ class Api(unittest.TestCase):
         self.assertEqual(self.line(st, "14", "tomato")["order"], 61)
         self.assertTrue(st["strip"]["at_risk"] > 0 and st["strip"]["recover"] > 0)
         with urllib.request.urlopen(self.base + "/") as r: self.assertIn(b"ResourceLeak", r.read())
+
+    def test_market_api_and_prototype_route(self):
+        data = {"source": "not_configured", "state": "Karnataka", "prices": {}, "note": "demo"}
+        with patch("resourceleak.server.market.market_data", return_value=data):
+            status, result = self.call("/api/market")
+        self.assertEqual((status, result["source"]), (200, "not_configured"))
+        with urllib.request.urlopen(self.base + "/proto.html") as response:
+            self.assertIn(b"Local crop demand", response.read())
 
     def test_hq_gate_and_validation(self):
         _, st = self.call("/api/state")

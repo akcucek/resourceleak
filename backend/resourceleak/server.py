@@ -3,9 +3,11 @@ import json, mimetypes, os, re
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
+from . import market
 from .engine import Store
 
 FRONT = Path(__file__).resolve().parents[2] / "frontend"
+PROTO = FRONT.parent / "proto.html"
 
 
 def make_handler(store):
@@ -31,7 +33,10 @@ def make_handler(store):
                 o = parse_qs(u.query).get("outlet", [""])[0]
                 if o not in ("14", "27"): return self._send(400, {"error": "unknown outlet"})
                 return self._send(200, store.context(o))
+            if u.path == "/api/market": return self._send(200, market.market_data())
             if u.path == "/api/health": return self._send(200, {"ok": True})
+            if u.path == "/proto.html" and PROTO.is_file():
+                return self._send(200, PROTO.read_bytes(), "text/html; charset=utf-8")
             name = "index.html" if u.path == "/" else u.path.lstrip("/")
             f = (FRONT / name).resolve()
             if FRONT in f.parents and f.is_file():
